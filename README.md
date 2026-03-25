@@ -52,3 +52,4 @@ Links to community projects and other resources that you might find helpful can 
 - [Presto Flip Clock](https://forums.pimoroni.com/t/presto-flip-clock/28089)
 - [Presto-Cal - timezone/DST library with iCalendar parsing](https://forums.pimoroni.com/t/micropython-timezone-and-dst-library/28318)
 - [WiiM Now Playing Display](https://github.com/retired-guy/WiiM-Presto)
+- [Presto Air Quality display](https://github.com/00b/Pimoroni-Presto-AQI/) using the [AirNow](https://www.airnow.gov/) API
