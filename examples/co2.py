@@ -88,7 +88,7 @@ def graph_polygon(top, bottom, graph_min, graph_max, readings, y_offset=0):
             y = round(bottom + ((readings[r] - graph_min) * (top - bottom) / (graph_max - graph_min)) + y_offset)
             points.append((x, y))
         points.append((WIDTH - 1, round(bottom)))
-        points.append((0, round(bottom)))    
+        points.append((0, round(bottom)))
     poly = Polygon()
     poly.path(*points)
     return poly
@@ -149,7 +149,7 @@ while True:
 
         # if lists are empty, populate the list with the current readings
         if len(co2_readings) == 0:
-            for i in range(MAX_READINGS):
+            for _i in range(MAX_READINGS):
                 co2_readings.append(co2)
                 temperature_readings.append(temperature)
                 humidity_readings.append(humidity)
@@ -226,6 +226,6 @@ while True:
         for x in range(7):
             presto.set_led_hsv(x, co2_hue / 360, 1.0, 1.0)
         presto.update()
-    
+
     gc.collect()
     time.sleep(0.5)
