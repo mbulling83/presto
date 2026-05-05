@@ -1,3 +1,7 @@
+# ICON monitoring
+# NAME C02
+# DESC Display data from your SCD41 CO2 sensor!
+
 """
 Add a SCD41 sensor breakout to Presto to make a handy CO2 detector!
 https://shop.pimoroni.com/products/scd41-co2-sensor-breakout
@@ -16,7 +20,7 @@ from picovector import Transform, Polygon, PicoVector, ANTIALIAS_X16
 
 i2c = PimoroniI2C(sda=40, scl=41)
 
-presto = Presto(full_res=True)
+presto = Presto(full_res=True, ambient_light=False)
 display = presto.display
 vector = PicoVector(display)
 
@@ -111,18 +115,27 @@ humidity_readings = []
 # set up
 vector.set_antialiasing(ANTIALIAS_X16)
 vector.set_font("osansb.af", 50)
+display.set_pen(BLACK)
+display.clear()
+presto.update()
+
+# display a message whilst waiting for the sensor to be ready
 display.set_pen(WHITE)
+vector.text("Waiting for sensor to be ready", 0, 40, max_width=WIDTH)
+presto.update()
 
 try:
     breakout_scd41.init(i2c)
     breakout_scd41.start()
-    vector.text("Waiting for sensor to be ready", 0, 0)
-    display.update()
 except RuntimeError as e:
+    # display a message if no breakout is found
     print(e)
-    vector.text("SCD41 breakout not detected :(", 0, 0)
-    vector.text("but you could buy one at pimoroni.com ;)", 0, HEIGHT - 120)
-    display.update()
+    display.set_pen(BLACK)
+    display.clear()
+    display.set_pen(WHITE)
+    vector.text("SCD41 breakout not detected :(", 0, 40, max_width=WIDTH)
+    vector.text("but you could buy one at pimoroni.com ;)", 0, HEIGHT - 120, max_width=WIDTH)
+    presto.update()
 
 while True:
     if presto.touch.state:
@@ -209,6 +222,9 @@ while True:
         #display.set_pen(WHITE)
         vector.text(f"Temp: {temperature:.0f}°C", PADDING, int(TEMPERATURE_GRAPH_BOTTOM) - 13)
 
+        # light up the rear leds the same colour as the graph
+        for x in range(7):
+            presto.set_led_hsv(x, co2_hue / 360, 1.0, 1.0)
         presto.update()
     
     gc.collect()
