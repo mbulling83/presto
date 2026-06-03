@@ -132,11 +132,13 @@ def _msg(text):
 # ── Network ────────────────────────────────────────────────────────────────
 
 def _sync_time():
-    if ntptime:
-        try:
-            ntptime.settime()
-        except Exception as e:
-            print("ntp:", e)
+    if not ntptime:
+        return
+    try:
+        ntptime.timeout = 3   # give NTP 3 s max; default can hang indefinitely
+        ntptime.settime()
+    except Exception as e:
+        print("ntp:", e)
 
 
 def _fetch_weather():
